@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Title of the application
-st.title('Food Delivery Apps Data Analysis')
+st.title('Zomato Data Analysis')
 
 # File upload
 uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
@@ -11,16 +11,18 @@ uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 if uploaded_file is not None:
     # Load data
     dataframe = pd.read_csv(uploaded_file)
-    #st.set_option('deprecation.showPyplotGlobalUse', False)
-    
     
     # Function to handle rate column
     def handleRate(value):
         value = str(value).split('/')
         value = value[0]
-        return float(value)
+        try:
+            return float(value)
+        except:
+            return None
 
     dataframe['rate'] = dataframe['rate'].apply(handleRate)
+    dataframe.dropna(subset=['rate'], inplace=True)
 
     # Sidebar for navigation
     st.sidebar.title("Navigation")
@@ -55,6 +57,7 @@ if uploaded_file is not None:
         ax.set_ylabel("Votes")
         ax.set_title("Total Votes by Restaurant Type")
         st.pyplot(fig)
+
     # Restaurant with maximum votes
     if 'Restaurant with maximum votes' in options:
         st.subheader('Restaurant with Maximum Votes')
@@ -72,8 +75,8 @@ if uploaded_file is not None:
         ax.set_ylabel("Count")
         ax.set_title("Number of Restaurants with Online Orders")
         st.pyplot(fig)
-    
-        # Explore rate column
+
+    # Explore ratings
     if 'Explore ratings' in options:
         st.subheader('Explore by Ratings')
         fig, ax = plt.subplots(figsize=(10, 6))
@@ -83,7 +86,6 @@ if uploaded_file is not None:
         ax.set_title("Distribution of Ratings")
         st.pyplot(fig)
 
-
     # Compare online and offline order ratings
     if 'Compare online and offline order ratings' in options:
         st.subheader('Compare Online and Offline Order Ratings')
@@ -92,25 +94,24 @@ if uploaded_file is not None:
         ax.set_xlabel("Online Order")
         ax.set_ylabel("Rating")
         ax.set_title("Ratings by Online Order")
-        fig.suptitle("")  # Suppress the default title
+        fig.suptitle("")  # Suppress default title
         st.pyplot(fig)
 
-
-    # Heatmap for listed_in(type) and online_order
-   if 'Heatmap of listed_in(type) and online_order' in options:
-       st.subheader('Heatmap of Listed In (Type) and Online Order')
-       pivot_table = dataframe.pivot_table(index='listed_in(type)', columns='online_order', aggfunc='size', fill_value=0)
-       fig, ax = plt.subplots(figsize=(12, 8))
-       cax = ax.imshow(pivot_table, cmap='YlGnBu', interpolation='nearest')
-       fig.colorbar(cax, ax=ax, label='Count')
-       ax.set_xticks(range(len(pivot_table.columns)))
-       ax.set_xticklabels(pivot_table.columns)
-       ax.set_yticks(range(len(pivot_table.index)))
-       ax.set_yticklabels(pivot_table.index)
-       ax.set_xlabel("Online Order")
-       ax.set_ylabel("Listed In (Type)")
-       ax.set_title("Heatmap of Restaurant Types and Online Orders")
-       st.pyplot(fig)
+    # Heatmap of listed_in(type) and online_order
+    if 'Heatmap of listed_in(type) and online_order' in options:
+        st.subheader('Heatmap of Listed In (Type) and Online Order')
+        pivot_table = dataframe.pivot_table(index='listed_in(type)', columns='online_order', aggfunc='size', fill_value=0)
+        fig, ax = plt.subplots(figsize=(12, 8))
+        cax = ax.imshow(pivot_table, cmap='YlGnBu', interpolation='nearest')
+        fig.colorbar(cax, ax=ax, label='Count')
+        ax.set_xticks(range(len(pivot_table.columns)))
+        ax.set_xticklabels(pivot_table.columns)
+        ax.set_yticks(range(len(pivot_table.index)))
+        ax.set_yticklabels(pivot_table.index)
+        ax.set_xlabel("Online Order")
+        ax.set_ylabel("Listed In (Type)")
+        ax.set_title("Heatmap of Restaurant Types and Online Orders")
+        st.pyplot(fig)
 
 else:
     st.info('Please upload a CSV file to get started.')
