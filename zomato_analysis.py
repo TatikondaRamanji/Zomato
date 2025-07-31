@@ -98,19 +98,19 @@ if uploaded_file is not None:
 
     # Heatmap for listed_in(type) and online_order
    if 'Heatmap of listed_in(type) and online_order' in options:
-        st.subheader('Heatmap of Listed In (Type) and Online Order')
-        pivot_table = dataframe.pivot_table(index='listed_in(type)', columns='online_order', aggfunc='size', fill_value=0)
-        fig, ax = plt.subplots(figsize=(12, 8))
-        cax = ax.imshow(pivot_table, cmap='YlGnBu', interpolation='nearest')
-        fig.colorbar(cax, ax=ax, label='Count')
-        ax.set_xticks(range(len(pivot_table.columns)))
-        ax.set_xticklabels(pivot_table.columns)
-        ax.set_yticks(range(len(pivot_table.index)))
-        ax.set_yticklabels(pivot_table.index)
-        ax.set_xlabel("Online Order")
-        ax.set_ylabel("Listed In (Type)")
-        ax.set_title("Heatmap of Restaurant Types and Online Orders")
-        st.pyplot(fig)
+       st.subheader('Heatmap of Listed In (Type) and Online Order')
+       pivot_table = dataframe.pivot_table(index='listed_in(type)', columns='online_order', aggfunc='size', fill_value=0)
+       fig, ax = plt.subplots(figsize=(12, 8))
+       cax = ax.imshow(pivot_table, cmap='YlGnBu', interpolation='nearest')
+       fig.colorbar(cax, ax=ax, label='Count')
+       ax.set_xticks(range(len(pivot_table.columns)))
+       ax.set_xticklabels(pivot_table.columns)
+       ax.set_yticks(range(len(pivot_table.index)))
+       ax.set_yticklabels(pivot_table.index)
+       ax.set_xlabel("Online Order")
+       ax.set_ylabel("Listed In (Type)")
+       ax.set_title("Heatmap of Restaurant Types and Online Orders")
+       st.pyplot(fig)
 
 else:
     st.info('Please upload a CSV file to get started.')
