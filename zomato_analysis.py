@@ -11,7 +11,8 @@ uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 if uploaded_file is not None:
     # Load data
     dataframe = pd.read_csv(uploaded_file)
-    st.set_option('deprecation.showPyplotGlobalUse', False)
+    #st.set_option('deprecation.showPyplotGlobalUse', False)
+    
     
     # Function to handle rate column
     def handleRate(value):
